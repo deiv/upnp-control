@@ -19,4 +19,9 @@
  *
  */
 
+#ifndef UPNP_CONTROL_HTTPD_H
+#define UPNP_CONTROL_HTTPD_H
+
 void httpd_server_init();
+
+#endif //UPNP_CONTROL_HTTPD_H

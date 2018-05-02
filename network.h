@@ -19,9 +19,11 @@
  *
  */
 
-#ifndef UPNP_CONTROL_UPNP_H
-#define UPNP_CONTROL_UPNP_H
+#include <task.h>
 
-bool upnp_server_init(void);
+#ifndef UPNP_CONTROL_NETWORK_H
+#define UPNP_CONTROL_NETWORK_H
 
-#endif //UPNP_CONTROL_UPNP_H
+void network_init(TaskHandle_t *services_task);
+
+#endif //UPNP_CONTROL_NETWORK_H

@@ -20,10 +20,13 @@
  */
 
 #include <string.h>
+
+#include <espressif/esp_common.h>
+
 #include <lwip/udp.h>
 #include <lwip/igmp.h>
 #include <lwip/ip_addr.h>
-#include <espressif/esp_common.h>
+
 #include "upnp.h"
 
 #define UPNP_MCAST_GRP  ("239.255.255.250")

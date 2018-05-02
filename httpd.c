@@ -19,15 +19,19 @@
  *
  */
 
+#include <string.h>
+#include <stdio.h>
+
 #include <espressif/esp_common.h>
 #include <esp8266.h>
 #include <esp/uart.h>
-#include <string.h>
-#include <stdio.h>
 #include <FreeRTOS.h>
 #include <task.h>
 #include <ssid_config.h>
+
 #include <httpd/httpd.h>
+
+#include "httpd.h"
 
 char *setup_cgi_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[]);
 
@@ -39,7 +43,7 @@ void httpd_server_init()
    
     httpd_init();
 
-    for (;;);
+    //for (;;);
 }
 /*
 char *setup_cgi_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
