@@ -1,0 +1,12 @@
+
+fsdata/fsdata.c
+
+build
+firmware
+
+*.udb
+
+.settings
+.idea
+.project
+.cproject
