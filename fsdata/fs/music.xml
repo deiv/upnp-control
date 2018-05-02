@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+	<specVersion>
+		<major>1</major>
+		<minor>0</minor>
+	</specVersion>
+	<actionList>
+		<action>
+			<name>GetAvailableInputs</name>
+			<argumentList>
+				<argument>
+					<name>RetAvailableInputs</name>
+					<direction>out</direction>
+					<relatedStateVariable>AvailableInputs</relatedStateVariable>
+				</argument>
+			</argumentList>
+		</action>
+	</actionList>
+	<serviceStateTable>
+		<stateVariable sendEvents="no">
+			<name>AvailableInputs</name>
+			<dataType>string</dataType>
+		</stateVariable>
+		<stateVariable sendEvents="yes">
+			<name>DefaultInput</name>
+			<dataType>string</dataType>
+		</stateVariable>
+	</serviceStateTable>
+</scpd>
