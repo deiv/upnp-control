@@ -47,7 +47,11 @@
   */
 static void services_task(void *arg)
 {
+    // XXX: loop ???
     for( ;; ) {
+
+
+        printf("services_task\n");
         /*
          * Wait for the network up
          */
