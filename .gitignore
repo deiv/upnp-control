@@ -1,8 +1,10 @@
 
-fsdata/fsdata.c
+fsdata.c
 
 build
 firmware
+cmake-build-*
+tests/target
 
 *.udb
 
@@ -10,3 +12,4 @@ firmware
 .idea
 .project
 .cproject
+*.iml

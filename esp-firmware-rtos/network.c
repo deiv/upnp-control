@@ -56,7 +56,7 @@ void network_init(TaskHandle_t *services_task)
         .password = WIFI_PASS,
     };
 
-    printf("WiFi: connecting to WiFi\n");
+    printf("network: connecting to WiFi\n");
     sdk_wifi_set_opmode(STATION_MODE);
     sdk_wifi_station_set_config(&config);
     sdk_wifi_station_connect();
@@ -79,10 +79,10 @@ void network_init(TaskHandle_t *services_task)
         }
 
         if (status == STATION_GOT_IP) {
-            printf("WiFi: connected\n");
+            printf("network: WiFi connected\n");
 
             /*
-             * Signal the services task, that we have a valid network connection
+             * Signal the services task that we have a valid network connection
              */
             xTaskNotifyGive( services_task ); //xSemaphoreGive(wifi_alive);
             taskYIELD();
@@ -92,7 +92,7 @@ void network_init(TaskHandle_t *services_task)
             taskYIELD();
         }
 
-        printf("WiFi: disconnected\n");
+        printf("network: WiFi disconnected\n");
         sdk_wifi_station_disconnect();
         delay_ms(1000);
     }

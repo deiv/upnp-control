@@ -51,7 +51,7 @@ static void services_task(void *arg)
     for( ;; ) {
 
 
-        printf("services_task\n");
+        printf("services_task: waiting for network up\n");
         /*
          * Wait for the network up
          */
@@ -60,10 +60,10 @@ static void services_task(void *arg)
         /*
          * Init the httpd task prior the upnp one (upnp needs http serving)
          */
-        printf("initializating httpd_task\n");
+        printf("services_task: initializating httpd task\n");
         (void) httpd_server_init();
 
-        printf("initializating mcast_task\n");
+        printf("services_task: initializating mcast task\n");
         (void) upnp_server_init();
     }
 
@@ -93,6 +93,8 @@ void user_init(void)
     printf("SDK version:%s\n", sdk_system_get_sdk_version());
 
     uart_set_baud(0, 115200);
+
+    init_pt2341();
 
     TaskHandle_t services_task_handle = NULL;
 
