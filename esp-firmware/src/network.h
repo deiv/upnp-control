@@ -1,9 +1,9 @@
 /*
- * @file httpd.h
+ * @file network.h
  *
- * @brief HTTP server
+ * @brief Network helpers
  * @author David Suárez
- * @date Mon, 17 Dec 2018 13:36:48 +0100
+ * @date Mon, 24 Dec 2018 00:43:29 +0100
  *
  * Copyright (c) 2018 David Suárez.
  * Email: david.sephirot@gmail.com
@@ -24,15 +24,23 @@
  * along with upnp-control.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef HTTP_SERVER_HTTPD_H
-#define HTTP_SERVER_HTTPD_H
+#ifndef ESP_FIRMWARE_NETWORK_H
+#define ESP_FIRMWARE_NETWORK_H
 
 /**
- * Init the http server
+ * Format a net_addr to string
  *
- * @return 0 if success; != on error
+ * @param addr ip address
+ * @return pointer to null terminated string or NULL on fail
  */
-int httpd_init();
+const char* format_ip_address(struct net_addr addr);
 
-#endif //HTTP_SERVER_HTTPD_H
+/**
+ * Wait fot the network interface to get configured (we wait for dhcp4 ack)
+ *
+ * @param iface the interface
+ * @return 0 if success; !0 if error
+ */
+int wait_for_net_interface_up(struct net_if *iface);
+
+#endif //ESP_FIRMWARE_NETWORK_H

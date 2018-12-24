@@ -1,7 +1,7 @@
 /*
- * @file httpd.h
+ * @file ssdp.h
  *
- * @brief HTTP server
+ * @brief Simple Service Discovery Protocol (ssdp)
  * @author David Suárez
  * @date Mon, 17 Dec 2018 13:36:48 +0100
  *
@@ -25,14 +25,15 @@
  *
  */
 
-#ifndef HTTP_SERVER_HTTPD_H
-#define HTTP_SERVER_HTTPD_H
+#ifndef HTTP_SERVER_SSDP_H
+#define HTTP_SERVER_SSDP_H
 
 /**
- * Init the http server
+ * Init ssdp server on the interface provided
  *
- * @return 0 if success; != on error
+ * @param iface network interface
+ * @return 0 on success; !0 on error
  */
-int httpd_init();
+int ssdp_server_init(struct net_if *iface);
 
-#endif //HTTP_SERVER_HTTPD_H
+#endif //HTTP_SERVER_SSDP_H

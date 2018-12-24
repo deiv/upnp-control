@@ -29,8 +29,15 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 
+#define CONFIG_NET_DHCPV4 // XXX: remove
+#define  CONFIG_NET_IPV4
+
+#include <net/net_if.h>
+
+#include "network.h"
 #include "httpd.h"
 #include "ssdp.h"
+
 
 void panic(const char *msg)
 {
@@ -43,9 +50,24 @@ void panic(const char *msg)
     }
 }
 
+
+
 void main(void)
 {
     int ret;
+    struct net_if *iface = NULL;
+
+    iface = net_if_get_first_by_type(&NET_L2_GET_NAME(ETHERNET));
+
+    if (iface == NULL) {
+        panic("No existe ninguna interfaz de red");
+    }
+
+    ret = wait_for_net_interface_up(iface);
+
+    if (ret != 0) {
+        panic(NULL);
+    }
 
     ret = httpd_init();
 
@@ -53,11 +75,11 @@ void main(void)
         panic(NULL);
     }
 
-    /*ret = ssdp_server_init();
+    ret = ssdp_server_init(iface);
 
     if (ret != 0) {
         panic(NULL);
-    }*/
+    }
 
     LOG_INF("exiting");
 }
