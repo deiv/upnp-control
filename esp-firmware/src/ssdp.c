@@ -45,8 +45,19 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 
 #include "ssdp.h"
 
+/**
+ * Timeout for the packets methods
+ */
+#define PKT_BUF_TIMEOUT K_MSEC(100)
 
+/**
+ * UPnP multicast address
+ */
 #define UPNP_MCAST_GRP  ("239.255.255.250")
+
+/**
+ * UPnP multicast port
+ */
 #define UPNP_MCAST_PORT (1900)
 
 //static int igmp_join(void);
@@ -58,7 +69,7 @@ static inline void set_dst_addr(sa_family_t family,
 static int init_udp_server(void);
 
 
-static struct net_app_ctx udp;
+static struct net_app_ctx udp_ctx;
 static const char *location_ip = NULL;
 
 /*
@@ -111,8 +122,6 @@ int igmp_join(void)
     return ret;
 }*/
 
-#define MAX_DBG_PRINT 64
-#define BUF_TIMEOUT K_MSEC(100)
 
 struct net_pkt *build_reply_pkt(struct net_app_ctx *ctx, struct net_pkt *pkt)
 {
@@ -121,7 +130,7 @@ struct net_pkt *build_reply_pkt(struct net_app_ctx *ctx, struct net_pkt *pkt)
     char msg[500];
     size_t msg_len;
 
-    reply_pkt = net_app_get_net_pkt(ctx, net_pkt_family(pkt), BUF_TIMEOUT);
+    reply_pkt = net_app_get_net_pkt(ctx, net_pkt_family(pkt), PKT_BUF_TIMEOUT);
 
     if (!reply_pkt) {
         return NULL;
@@ -145,7 +154,7 @@ struct net_pkt *build_reply_pkt(struct net_app_ctx *ctx, struct net_pkt *pkt)
     msg_len = strlen(msg) + 1;
 
     net_pkt_set_appdatalen(reply_pkt, msg_len);
-    net_pkt_append(reply_pkt, msg_len, msg, BUF_TIMEOUT);
+    net_pkt_append(reply_pkt, msg_len, msg, PKT_BUF_TIMEOUT);
 
     return reply_pkt;
 }
@@ -182,7 +191,6 @@ static inline void set_dst_addr(sa_family_t family,
 
 static void udp_received(struct net_app_ctx *ctx, struct net_pkt *pkt, int status, void *user_data)
 {
-    static char dbg[MAX_DBG_PRINT + 1];
     struct net_pkt *reply_pkt;
     struct sockaddr dst_addr;
     sa_family_t family = net_pkt_family(pkt);
@@ -190,8 +198,7 @@ static void udp_received(struct net_app_ctx *ctx, struct net_pkt *pkt, int statu
     u32_t pkt_len;
     int ret;
 
-    snprintk(dbg, MAX_DBG_PRINT, "UDP IPv%c", family == AF_INET6 ? '6' : '4');
-    LOG_INF("%s received %d bytes", dbg, net_pkt_appdatalen(pkt));
+    LOG_INF("received %d bytes", net_pkt_appdatalen(pkt));
 
     if (family == AF_INET6) {
         dst_len = sizeof(struct sockaddr_in6);
@@ -201,7 +208,6 @@ static void udp_received(struct net_app_ctx *ctx, struct net_pkt *pkt, int statu
     }
 
     set_dst_addr(family, pkt, &dst_addr, ctx);
-
     reply_pkt = build_reply_pkt(ctx, pkt);
 
     net_pkt_unref(pkt);
@@ -231,7 +237,7 @@ static int init_udp_server(void)
 {
     int ret;
 
-    ret = net_app_init_udp_server(&udp, NULL, UPNP_MCAST_PORT, NULL);
+    ret = net_app_init_udp_server(&udp_ctx, NULL, UPNP_MCAST_PORT, NULL);
 
     if (ret < 0) {
         LOG_ERR("Cannot init SSDP service at addr: '%s', port '%d'", location_ip, UPNP_MCAST_PORT);
@@ -242,20 +248,20 @@ static int init_udp_server(void)
     net_app_set_net_pkt_pool(&udp, tx_udp_slab, data_udp_pool);
 #endif
 
-    ret = net_app_set_cb(&udp, NULL, udp_received, pkt_sent, NULL);
+    ret = net_app_set_cb(&udp_ctx, NULL, udp_received, pkt_sent, NULL);
 
     if (ret < 0) {
         LOG_ERR("Cannot set callbacks (%d)", ret);
-        net_app_release(&udp);
+        net_app_release(&udp_ctx);
         return -1;
     }
 
-    net_app_server_enable(&udp);
-    ret = net_app_listen(&udp);
+    net_app_server_enable(&udp_ctx);
+    ret = net_app_listen(&udp_ctx);
 
     if (ret < 0) {
         LOG_ERR("Cannot wait for connections (%d)", ret);
-        net_app_release(&udp);
+        net_app_release(&udp_ctx);
         return -1;
     }
 

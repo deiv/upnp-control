@@ -32,6 +32,7 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 #define CONFIG_NET_DHCPV4 // XXX: remove
 #define  CONFIG_NET_IPV4
 
+#include <zephyr.h>
 #include <net/net_if.h>
 
 #include "network.h"

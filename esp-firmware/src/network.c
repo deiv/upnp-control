@@ -29,6 +29,7 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 
+#include <zephyr.h>
 #include <stdlib.h>
 #include <net/net_if.h>
 #include <net/dhcpv4.h>
@@ -38,9 +39,9 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 /**
  * Max wait time to get dhcp ack
  */
-#define MAX_NET_CONFIGURATION_WAIT_MILISECONDS (1000 * 60 * 5)
+#define MAX_NET_CONFIGURATION_WAIT_MILISECONDS K_MINUTES(5)
 
-#define WAIT_MILISECONDS_FOR_DHCP_ACK (1000)
+#define WAIT_MILISECONDS_FOR_DHCP_ACK K_SECONDS(1)
 
 const char* format_ip_address(struct net_addr addr)
 {
