@@ -2,6 +2,9 @@
 
 ## Roadmap
 
+- [x] Naming
+  - [x] DHCPv4
+  - [ ] AutoIP ?
 - [ ] Discovery
   - [ ] SSDP
     - [x] Search Response
@@ -23,6 +26,7 @@
 - [ ] RTOS
   - [ ] Kconfig: log levels
   - [ ] Syslog
+  - [ ] Heap ?
   
 ## Compile
 

@@ -1,4 +1,4 @@
-/*
+/**
  * @file httpd.c
  *
  * @brief HTTP server
@@ -86,6 +86,7 @@ static int http_response(struct http_ctx *ctx, const char *header, const char *p
     ret = http_add_header(ctx, HTTP_CRLF, dst, str);
 
     if (ret < 0) {
+        LOG_ERR("Cannot send data to peer (%d)", ret);
         return ret;
     }
 

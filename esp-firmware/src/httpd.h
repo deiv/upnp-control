@@ -1,4 +1,4 @@
-/*
+/**
  * @file httpd.h
  *
  * @brief HTTP server
