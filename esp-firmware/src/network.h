@@ -1,4 +1,4 @@
-/*
+/**
  * @file network.h
  *
  * @brief Network helpers
@@ -27,19 +27,32 @@
 #ifndef ESP_FIRMWARE_NETWORK_H
 #define ESP_FIRMWARE_NETWORK_H
 
+#include "net/net_ip.h"
+
 /**
  * Format a net_addr to string
  *
  * @param addr ip address
+ *
  * @return pointer to null terminated string or NULL on fail
  */
-const char* format_ip_address(struct net_addr addr);
+const char* format_net_address_ip(struct net_addr *addr);
 
 /**
- * Wait fot the network interface to get configured (we wait for dhcp4 ack)
+ * Format a sockaddr to string
+ *
+ * @param addr ip address
+ *
+ * @return pointer to null terminated string or NULL on fail
+ */
+const char* format_sock_address_ip(struct sockaddr *addr);
+
+/**
+ * Wait fot the network interface to get configured (we wait for dhcp4 bound, atm)
  *
  * @param iface the interface
- * @return 0 if success; !0 if error
+ *
+ * @return 0 on success; !0 if error
  */
 int wait_for_net_interface_up(struct net_if *iface);
 

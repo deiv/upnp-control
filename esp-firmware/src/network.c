@@ -1,4 +1,4 @@
-/*
+/**
  * @file network.c
  *
  * @brief Network helpers
@@ -43,18 +43,38 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 
 #define WAIT_MILISECONDS_FOR_DHCP_ACK K_SECONDS(1)
 
-const char* format_ip_address(struct net_addr addr)
+const char* format_net_address_ip(struct net_addr *addr)
 {
     char *ip_as_string;
     char *ret;
 
-    ip_as_string = malloc(NET_IPV4_ADDR_LEN + 1);
+    ip_as_string = k_malloc(NET_IPV4_ADDR_LEN + 1);
 
     if (ip_as_string == NULL) {
         return NULL;
     }
 
-    ret = net_addr_ntop(addr.family, (const void*) &addr.in_addr, ip_as_string, NET_IPV4_ADDR_LEN + 1);
+    ret = net_addr_ntop(addr->family, (const void*) &addr->in_addr, ip_as_string, NET_IPV4_ADDR_LEN + 1);
+
+    if (ret == NULL) {
+        k_free(ip_as_string);
+    }
+
+    return ret;
+}
+
+const char* format_sock_address_ip(struct sockaddr* addr)
+{
+    char *ip_as_string;
+    char *ret;
+
+    ip_as_string = k_malloc(NET_IPV4_ADDR_LEN + 1);
+
+    if (ip_as_string == NULL) {
+        return NULL;
+    }
+
+    ret = net_addr_ntop(addr->sa_family, (const void *) &net_sin(addr)->sin_addr, ip_as_string, NET_IPV4_ADDR_LEN + 1);
 
     if (ret == NULL) {
         k_free(ip_as_string);
@@ -83,4 +103,6 @@ int wait_for_net_interface_up(struct net_if *iface)
             return -1;
         }
     }
+
+    return 0;
 }

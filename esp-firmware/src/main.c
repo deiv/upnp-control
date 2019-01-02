@@ -1,4 +1,4 @@
-/*
+/**
  * @file main.c
  *
  * @brief Main program entry point
@@ -36,8 +36,7 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 #include <net/net_if.h>
 
 #include "network.h"
-#include "httpd.h"
-#include "ssdp.h"
+#include "upnp.h"
 
 
 void panic(const char *msg)
@@ -50,8 +49,6 @@ void panic(const char *msg)
         k_sleep(K_FOREVER);
     }
 }
-
-
 
 void main(void)
 {
@@ -70,13 +67,10 @@ void main(void)
         panic(NULL);
     }
 
-    ret = httpd_init();
-
-    if (ret != 0) {
-        panic(NULL);
-    }
-
-    ret = ssdp_server_init(iface);
+    /*
+     * Get the first ip unicast address configured in the interface as the upnp server address
+     */
+    ret = init_upnp_system(&iface->config.ip.ipv4->unicast[0].address);
 
     if (ret != 0) {
         panic(NULL);
